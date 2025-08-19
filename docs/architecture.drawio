@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" version="28.1.0">
+  <diagram name="Page-1" id="9EzllwjQFQfnp1ALgU7h">
+    <mxGraphModel dx="2100" dy="819" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="783tKvscMJM6fg4KQwsB-2" value="User" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-60" y="545" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-4" value="" style="swimlane;startSize=0;" vertex="1" parent="1">
+          <mxGeometry x="410" y="420" width="480" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-5" value="DOKS" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="200" y="10" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-7" value="Node 1" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="30" y="90" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-8" value="Node 2" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="260" y="90" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-10" value="Pod1" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="40" y="110" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-20" value="Pod4" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="390" y="110" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-19" value="Pod3" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="280" y="110" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-18" value="Pod2" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="150" y="110" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-26" value="Nginx" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="40" y="250" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-27" value="Nginx" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="150" y="250" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-28" value="Nginx" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="280" y="250" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-29" value="Nginx" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry x="390" y="250" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-6" value="Load balancer + gateway&amp;nbsp;&lt;div&gt;Rate limiting&amp;nbsp;&lt;/div&gt;&lt;div&gt;Routing&amp;nbsp;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="160" y="485" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-23" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="783tKvscMJM6fg4KQwsB-2" target="783tKvscMJM6fg4KQwsB-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="480" y="710" as="sourcePoint" />
+            <mxPoint x="530" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-24" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=-0.006;entryY=0.4;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="783tKvscMJM6fg4KQwsB-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="584" as="sourcePoint" />
+            <mxPoint x="200" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="783tKvscMJM6fg4KQwsB-25" value="Horizontal Pod Autoscaler - HPA&amp;nbsp;&lt;div&gt;CPU - 50 %&lt;/div&gt;&lt;div&gt;Memory - 70%&lt;/div&gt;&lt;div&gt;Replicas - 2 to 10&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="510" y="738" width="200" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

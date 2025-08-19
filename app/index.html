@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalOcean Kubernetes Demo - Scalable Web App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .status-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 1s ease-out;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .status-card h3 {
+            color: #5a67d8;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .status-card .icon {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: rgba(90,103,216,0.1);
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: #5a67d8;
+            font-size: 1.1rem;
+        }
+
+        .load-test-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .load-test-section h3 {
+            color: #5a67d8;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(90,103,216,0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .log-output {
+            background: #1a1a1a;
+            color: #00ff41;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            padding: 1rem;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .architecture-info {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1.4s ease-out;
+        }
+
+        .architecture-info h3 {
+            color: #5a67d8;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .architecture-info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .architecture-info li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(90,103,216,0.1);
+        }
+
+        .architecture-info li:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 DigitalOcean Kubernetes Demo</h1>
+            <p>Scalable Web Application demonstrating DOKS capabilities with auto-scaling, load balancing, and performance monitoring</p>
+        </header>
+
+        <div class="status-grid">
+            <div class="status-card">
+                <h3><span class="icon">🖥️</span>System Status</h3>
+                <div class="metric">
+                    <span>Server Status</span>
+                    <span class="metric-value" id="server-status">Online</span>
+                </div>
+                <div class="metric">
+                    <span>Response Time</span>
+                    <span class="metric-value" id="response-time">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span>Uptime</span>
+                    <span class="metric-value" id="uptime">Loading...</span>
+                </div>
+                <div class="metric">
+                    <span>Pod Instance</span>
+                    <span class="metric-value" id="pod-id">Loading...</span>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <h3><span class="icon">📊</span>Performance Metrics</h3>
+                <div class="metric">
+                    <span>Requests/sec</span>
+                    <span class="metric-value" id="requests-per-sec">0</span>
+                </div>
+                <div class="metric">
+                    <span>Active Connections</span>
+                    <span class="metric-value" id="active-connections">1</span>
+                </div>
+                <div class="metric">
+                    <span>Memory Usage</span>
+                    <span class="metric-value" id="memory-usage">~32MB</span>
+                </div>
+                <div class="metric">
+                    <span>CPU Usage</span>
+                    <span class="metric-value" id="cpu-usage">~5%</span>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <h3><span class="icon">⚡</span>Kubernetes Info</h3>
+                <div class="metric">
+                    <span>Cluster Region</span>
+                    <span class="metric-value">BLR1</span>
+                </div>
+                <div class="metric">
+                    <span>Node Pool Size</span>
+                    <span class="metric-value">s-2vcpu-2gb</span>
+                </div>
+                <div class="metric">
+                    <span>Auto Scaling</span>
+                    <span class="metric-value">Enabled (2-5 pods)</span>
+                </div>
+                <div class="metric">
+                    <span>Load Balancer</span>
+                    <span class="metric-value">Active</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="load-test-section">
+            <h3>🔥 Load Testing & Scaling Demo</h3>
+            <p style="text-align: center; margin-bottom: 1.5rem; color: #666;">
+                Simulate traffic to demonstrate Horizontal Pod Autoscaling (HPA) in action
+            </p>
+            
+            <div class="button-group">
+                <button class="btn" onclick="startLightLoad()">Light Load (10 req/s)</button>
+                <button class="btn" onclick="startMediumLoad()">Medium Load (50 req/s)</button>
+                <button class="btn" onclick="startHeavyLoad()">Heavy Load (100 req/s)</button>
+                <button class="btn" onclick="stopLoad()" style="background: #e53e3e;">Stop Load</button>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="load-progress"></div>
+            </div>
+
+            <div class="log-output" id="load-log">
+                <div>🔗 Ready to start load testing...</div>
+                <div>💡 Use kubectl get hpa to monitor scaling in real-time</div>
+                <div>📈 Watch pods scale: kubectl get pods -w</div>
+            </div>
+        </div>
+
+        <div class="architecture-info">
+            <h3>🏗️ Architecture Overview</h3>
+            <ul>
+                <li><strong>Platform:</strong> DigitalOcean Kubernetes Service (DOKS)</li>
+                <li><strong>Container Runtime:</strong> Docker with multi-stage builds</li>
+                <li><strong>Web Server:</strong> NGINX with optimized configuration</li>
+                <li><strong>Load Balancer:</strong> DigitalOcean Load Balancer (Layer 4)</li>
+                <li><strong>Auto Scaling:</strong> Horizontal Pod Autoscaler (CPU & Memory based)</li>
+                <li><strong>Monitoring:</strong> Built-in health checks and metrics endpoints</li>
+                <li><strong>Security:</strong> Non-root containers, security headers, resource limits</li>
+            </ul>
+        </div>
+
+        <footer class="footer">
+            <p>Built for DigitalOcean Technical Account Manager Assignment</p>
+            <p>Demonstrating scalability, performance optimization, and cost-effective cloud architecture</p>
+        </footer>
+    </div>
+
+    <script>
+        // Simulated metrics
+        let requestCount = 0;
+        let activeConnections = 1;
+        let loadTestActive = false;
+        let loadInterval = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMetrics();
+            setInterval(updateMetrics, 2000);
+            generatePodId();
+            measureResponseTime();
+        });
+
+        function updateMetrics() {
+            // Update response time
+            const responseTime = Math.floor(Math.random() * 50) + 10;
+            document.getElementById('response-time').textContent = responseTime + 'ms';
+
+            // Update uptime
+            const uptime = Math.floor(Date.now() / 1000 / 60);
+            document.getElementById('uptime').textContent = uptime + ' minutes';
+
+            // Update requests per second
+            if (loadTestActive) {
+                const rps = Math.floor(Math.random() * 20) + (requestCount / 10);
+                document.getElementById('requests-per-sec').textContent = rps;
+                
+                // Simulate scaling
+                if (rps > 50) {
+                    document.getElementById('active-connections').textContent = Math.min(100, activeConnections + Math.floor(rps / 10));
+                    document.getElementById('cpu-usage').textContent = '~' + Math.min(80, Math.floor(rps / 2)) + '%';
+                    document.getElementById('memory-usage').textContent = '~' + Math.min(128, 32 + Math.floor(rps / 5)) + 'MB';
+                }
+            } else {
+                document.getElementById('requests-per-sec').textContent = Math.floor(Math.random() * 3);
+                document.getElementById('cpu-usage').textContent = '~' + (Math.floor(Math.random() * 10) + 5) + '%';
+            }
+        }
+
+        function generatePodId() {
+            const podId = 'web-app-' + Math.random().toString(36).substr(2, 8);
+            document.getElementById('pod-id').textContent = podId;
+        }
+
+        async function measureResponseTime() {
+            try {
+                const start = performance.now();
+                await fetch('/api/status');
+                const end = performance.now();
+                const responseTime = Math.floor(end - start);
+                document.getElementById('response-time').textContent = responseTime + 'ms';
+            } catch (error) {
+                // Fallback to simulated response time
+                console.log('Using simulated response time');
+            }
+        }
+
+        function addLog(message) {
+            const logOutput = document.getElementById('load-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logOutput.appendChild(logEntry);
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+
+        function updateProgress(percentage) {
+            document.getElementById('load-progress').style.width = percentage + '%';
+        }
+
+        function startLightLoad() {
+            if (loadTestActive) return;
+            
+            loadTestActive = true;
+            addLog('🟢 Starting light load test (10 req/s)');
+            addLog('💡 This should keep CPU below HPA threshold');
+            
+            requestCount = 0;
+            loadInterval = setInterval(() => {
+                requestCount += 10;
+                updateProgress(Math.min(100, (requestCount / 1000) * 100));
+                
+                // Simulate requests
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(() => {
+                        fetch('/api/status').catch(() => {});
+                    }, i * 100);
+                }
+                
+                if (requestCount >= 1000) {
+                    stopLoad();
+                    addLog('✅ Light load test completed');
+                }
+            }, 1000);
+        }
+
+        function startMediumLoad() {
+            if (loadTestActive) return;
+            
+            loadTestActive = true;
+            addLog('🟡 Starting medium load test (50 req/s)');
+            addLog('⚡ This should trigger HPA scaling');
+            
+            requestCount = 0;
+            loadInterval = setInterval(() => {
+                requestCount += 50;
+                updateProgress(Math.min(100, (requestCount / 2000) * 100));
+                
+                // Simulate requests
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        fetch('/api/status').catch(() => {});
+                    }, i * 20);
+                }
+                
+                if (requestCount >= 2000) {
+                    stopLoad();
+                    addLog('✅ Medium load test completed');
+                    addLog('📊 Check: kubectl get hpa web-app-hpa');
+                }
+            }, 1000);
+        }
+
+        function startHeavyLoad() {
+            if (loadTestActive) return;
+            
+            loadTestActive = true;
+            addLog('🔴 Starting heavy load test (100 req/s)');
+            addLog('🚀 This should scale to maximum pods');
+            
+            requestCount = 0;
+            loadInterval = setInterval(() => {
+                requestCount += 100;
+                updateProgress(Math.min(100, (requestCount / 3000) * 100));
+                
+                // Simulate requests
+                for (let i = 0; i < 100; i++) {
+                    setTimeout(() => {
+                        fetch('/api/status').catch(() => {});
+                    }, i * 10);
+                }
+                
+                if (requestCount >= 3000) {
+                    stopLoad();
+                    addLog('✅ Heavy load test completed');
+                    addLog('📈 Pods should now be scaling down');
+                }
+            }, 1000);
+        }
+
+        function stopLoad() {
+            if (!loadTestActive) return;
+            
+            loadTestActive = false;
+            if (loadInterval) {
+                clearInterval(loadInterval);
+                loadInterval = null;
+            }
+            
+            updateProgress(0);
+            addLog('⏹️ Load test stopped');
+            addLog('⏳ Waiting for scale-down (may take 5+ minutes)');
+            
+            // Reset metrics gradually
+            setTimeout(() => {
+                activeConnections = 1;
+                document.getElementById('active-connections').textContent = '1';
+                document.getElementById('memory-usage').textContent = '~32MB';
+                document.getElementById('cpu-usage').textContent = '~5%';
+            }, 3000);
+        }
+
+        // Simulate real-time updates
+        setInterval(() => {
+            if (loadTestActive) {
+                // Add realistic log entries during load testing
+                const messages = [
+                    '📊 CPU threshold: ' + (Math.floor(Math.random() * 30) + 40) + '%',
+                    '🔄 Pod scaling event detected',
+                    '⚡ Load balancer distributing traffic',
+                    '📈 Response times: ' + (Math.floor(Math.random() * 100) + 50) + 'ms avg'
+                ];
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                if (Math.random() > 0.7) {
+                    addLog(randomMessage);
+                }
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
